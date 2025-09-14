@@ -6,7 +6,7 @@ export default async function handler(req: any, res: any) {
 	}
 
 	try {
-		const { to, subject, text } = req.body
+		const { to, subject, html } = req.body
 
 		const transporter = nodemailer.createTransport({
 			service: "gmail",
@@ -20,11 +20,12 @@ export default async function handler(req: any, res: any) {
 			from: process.env.EMAIL_USER,
 			to,
 			subject,
-			text,
+			html,
 		})
 
 		return res.status(200).json({ success: true })
 	} catch (err: any) {
-		return res.status(500).json({ error: err.message })
+		console.error("Mailer error:", err)
+		return res.status(500).json({ error: err.message || "Unknown error" })
 	}
 }
